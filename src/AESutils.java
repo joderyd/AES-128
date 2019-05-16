@@ -13,19 +13,30 @@ public class AESutils {
      * @return a 4x4 matrix block
      */
     public static int[][] stringToMatrix (String string) {
-        int bits = 128;
-        int N = (int)Math.sqrt(bits/8);
+        int N = 4;
         int[][] matrix = new int[N][N];
 
-        while(string.length()< bits/8){
+        while(string.length()< 16){
             string += " ";
         }
 
-        byte[] bytes = string.getBytes();
+        String plain = string;
+        int[] intHexes = new int[16];
+        for(int i=0; i<16; i++) {
+            char c = plain.charAt(i);
+            String hex = Integer.toHexString((int) c);
+            int intHex = Integer.parseInt(hex, 16);
+            intHexes[i] = intHex;
+            //System.out.println(hex + "\t" + intHex);
+        }
 
+        byte[] bytes = string.getBytes();
+        int idx = 0;
         for(int i=0; i< N; i++){
             for(int j=0; j< N; j++){
-                matrix[j][i] = (int)bytes[i*4+j];
+                //matrix[j][i] = (int)bytes[i*4+j];
+                matrix[j][i] = intHexes[idx];
+                idx++;
             }
         }
         return matrix;
@@ -36,26 +47,37 @@ public class AESutils {
         StringBuilder stringBuilder = new StringBuilder();
         for(char c : chars){
             String hex = Integer.toHexString((int) c);
+            if(hex.length() == 1){
+                stringBuilder.append("0");
+            }
             stringBuilder.append(hex.toUpperCase());
         }
         return stringBuilder.toString();
     }
 
 
-    public static void printMatrix(int[][] matrix){
-        for(int[] word : matrix){
-            for(int i : word){
-                System.out.print(i + "\t");
+    public static void printMatrixtoHex(int[][] matrix){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                int val = matrix[j][i];
+                String hexVal = Integer.toHexString(val).toUpperCase();
+                if(hexVal.length() == 1){
+                    sb.append("0");
+                }
+                sb.append(hexVal);
             }
-            System.out.print("\n");
         }
-        System.out.println();
+        System.out.println(sb.toString());
     }
 
     public static void printHexMatrix(int[][] matrix){
         for(int[] word : matrix){
             for(int i : word){
-                String hex = Integer.toHexString(i);
+                String hex = Integer.toHexString(i).toUpperCase();
+                if(hex.length() == 1){
+                    System.out.print("0");
+                }
                 System.out.print(hex+ "\t");
             }
             System.out.println();
@@ -63,16 +85,7 @@ public class AESutils {
         System.out.println();
     }
 
-    public static void printHexArray(int[] array){
-        for(int i : array){
-            String hex = Integer.toHexString(i);
-            if(hex.length() == 1){
-                System.out.print("0");
-            }
-            System.out.println(hex);
-        }
-        System.out.println();
-    }
+
 
     public static int[] getColumn(int[][] matrix, int idx){
         int[] column = new int[matrix.length];
@@ -85,6 +98,7 @@ public class AESutils {
         }
         return column;
     }
+
 
     public static int[][] getSbox(boolean inverted){
         int[][] sBox = new int[16][16];
@@ -108,7 +122,6 @@ public class AESutils {
         }
         return sBox;
     }
-
 
 
     public static int[] Xor(int[] a, int[] b){
