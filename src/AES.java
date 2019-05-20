@@ -1,11 +1,4 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
-
 public class AES {
-
      static final int[][] sBox = {
             {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76},
             {0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0},
@@ -24,7 +17,8 @@ public class AES {
             {0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf},
             {0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16}};
 
-    static final int[][] table_mc2 = {
+     // The following three matrixes are being used for mixColumns
+    static final int[][] t2 = {
             {0x00, 0x02, 0x04, 0x06, 0x08, 0x0a, 0x0c, 0x0e, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e},
             {0x20, 0x22, 0x24, 0x26, 0x28, 0x2a, 0x2c, 0x2e, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3a, 0x3c, 0x3e},
             {0x40, 0x42, 0x44, 0x46, 0x48, 0x4a, 0x4c, 0x4e, 0x50, 0x52, 0x54, 0x56, 0x58, 0x5a, 0x5c, 0x5e},
@@ -42,9 +36,7 @@ public class AES {
             {0xdb, 0xd9, 0xdf, 0xdd, 0xd3, 0xd1, 0xd7, 0xd5, 0xcb, 0xc9, 0xcf, 0xcd, 0xc3, 0xc1, 0xc7, 0xc5},
             {0xfb, 0xf9, 0xff, 0xfd, 0xf3, 0xf1, 0xf7, 0xf5, 0xeb, 0xe9, 0xef, 0xed, 0xe3, 0xe1, 0xe7, 0xe5}
     };
-
-
-    static final int[][] table_mc3 = {
+    static final int[][] t3 = {
             {0x00,0x03,0x06,0x05,0x0c,0x0f,0x0a,0x09,0x18,0x1b,0x1e,0x1d,0x14,0x17,0x12,0x11},
             {0x30,0x33,0x36,0x35,0x3c,0x3f,0x3a,0x39,0x28,0x2b,0x2e,0x2d,0x24,0x27,0x22,0x21},
             {0x60,0x63,0x66,0x65,0x6c,0x6f,0x6a,0x69,0x78,0x7b,0x7e,0x7d,0x74,0x77,0x72,0x71},
@@ -62,19 +54,22 @@ public class AES {
             {0x3b,0x38,0x3d,0x3e,0x37,0x34,0x31,0x32,0x23,0x20,0x25,0x26,0x2f,0x2c,0x29,0x2a},
             {0x0b,0x08,0x0d,0x0e,0x07,0x04,0x01,0x02,0x13,0x10,0x15,0x16,0x1f,0x1c,0x19,0x1a}
     };
+    static final int[][] transformMatrix = {{2, 3, 1, 1}, {1, 2, 3, 1}, {1, 1, 2, 3}, {3, 1, 1, 2}};
 
 
-    public static int[][] Xor(int[][] a, int[][] b){
-        int[][] result = new int[a.length][a.length];
-        for(int i=0; i< a.length; i++){
-            for(int j=0; j<a.length; j++){
-                result[i][j] = a[i][j] ^ b[i][j];
+
+    static int[][] addRoundKey(int[][] A, int[][] B){
+        int[][] result = new int[A.length][A.length];
+        for(int i=0; i< A.length; i++){
+            for(int j=0; j<A.length; j++){
+                result[i][j] = A[i][j] ^ B[i][j];
             }
         }
         return result;
     }
 
-    public static int[][] subBytes(int[][] word, int[][] sBox){
+
+    static int[][] subBytes(int[][] word, int[][] sBox){
         for(int i=0; i< word.length; i++){
             for(int j=0; j<word.length; j++){
                 String hex = Integer.toHexString(word[i][j]);
@@ -99,7 +94,7 @@ public class AES {
         return word;
     }
 
-    public static int[][] shiftRows(int[][] state){
+    static int[][] shiftRows(int[][] state){
         int[][] newState = new int[state.length][state.length];
         for(int i=0; i<state.length; i++){
             newState[0][i] = state[0][i];
@@ -119,18 +114,26 @@ public class AES {
         return newState;
     }
 
-    public static int[][] MixColumns(int[][] state){
-        int[][] T = new int[][]{{2, 3, 1, 1}, {1, 2, 3, 1}, {1, 1, 2, 3}, {3, 1, 1, 2}};
 
+
+
+    static int[][] MixColumns(int[][] state){
         int[][] res = new int[4][4];
         for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
                 int val = 0;
-                //mchelper
                 for(int k=0; k<4; k++){
-                    int a = T[i][k];
-                    int b = state[k][j];
-                    val ^= mcCalc(a, b);
+                    int sVal = state[k][j];
+                    int tVal = transformMatrix[i][k];
+                    if(tVal == 1){
+                        val ^= sVal;
+                    }
+                    else if(tVal == 2){
+                        val ^= t2[sVal/16][sVal%16];
+                    }
+                    else if(tVal ==3){
+                        val ^= t3[sVal/16][sVal%16];
+                    }
                 }
                 res[i][j] = val;
             }
@@ -139,56 +142,75 @@ public class AES {
     }
 
 
-    private static int mcCalc(int a, int b) //Helper method for mcHelper
-    {
-        if (a == 1) {
-            return b;
-        } else if (a == 2) {
-            return table_mc2[b / 16][b % 16];
-        } else if (a == 3) {
-            return table_mc3[b / 16][b % 16];
-        }
-        return 0;
-    }
-
-
-
-
     public static int[][] encrypt(int[][] plain, int[][] key){
-        int[][] sBox = AESutils.getSbox();
         int[][] roundKey = key;
-
         // Initial addRoundKey
-        int[][] state = Xor(plain, key);
-
-        //-------------------------------------
-        //------  9 rounds   ----
+        int[][] state = addRoundKey(plain, key);
+        /*-  9 rounds for 128-bit key  -*/
         for(int i=0; i<9; i++) {
             //1. subBytes
             state = subBytes(state, sBox);
             //2. shiftRows
             state = shiftRows(state);
             //3. mixColumns
-            //int[][] newMix = MixColumns(state);
             state = MixColumns(state);
             //4. addRoundKey
             roundKey = KeyManager.getNextKey(roundKey, i);
-            state = Xor(roundKey, state);
+            state = addRoundKey(roundKey, state);
         }
-
-        // ----    FINAL 10th ROUND  ---//
+        //---- Final 10th round ---//
         state = subBytes(state, sBox);
         state = shiftRows(state);
         roundKey = KeyManager.getNextKey(roundKey, 9);
-        state = Xor(roundKey, state);
-
+        state = addRoundKey(roundKey, state);
         return state;
     }
 
-    public static byte[] getByteArray(int[][] A){
+
+
+    public static void main(String[] args){
+        byte[] byteArr = AESutils.readFile("src/aes_sample.in");
+
+
+/*      The code below is for Kattis
+
+        InputStream in = new DataInputStream(System.in);
+        OutputStream out = new DataOutputStream(System.out);
+        byte[] byteArr = new byte[32];
+        try {
+            in.read(byteArr);
+            //in.read
+        }catch(Exception e){e.printStackTrace();}
+
+*/
+        int[][] block = new int[4][4];
+        int[][] key = new int[4][4];
+        int[][] cipher;
+        int idx = 0;
+        int blocks = (byteArr.length-32)/16;
+        for(int rounds =0; rounds<=blocks; rounds++){
+            for(int i=0; i<4; i++){
+                for(int j=0; j<4; j++){
+                    // Only read key  once
+                    if(rounds == 0){
+                        key[j][i] = (int)byteArr[idx];
+                    }
+                    block[j][i] = (int)byteArr[idx+16];
+                    idx++;
+                }
+            }
+            cipher = encrypt(block, key);
+
+            System.out.println(AESutils.getHexString(cipher));
+            System.out.print(getByteArray(cipher));
+        }
+    }
+
+
+
+    private static byte[] getByteArray(int[][] A){
         byte[] result = new byte[16];
         int idx = 0;
-
         for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
                 result[idx] = (byte)A[j][i];
@@ -199,72 +221,16 @@ public class AES {
     }
 
 
-    public static void main(String[] args){
-        byte[] byteArr = AESutils.readFile("src/aes_sample.in");
-
-
-        //Scanner sc = new Scanner(new InputStreamReader(System.in));
-
-        //Scanner sc = new Scanner(new InputStreamReader(System.in, "UTF-8"));
-/*
-        byte[] byteArr = new byte[16];
-        int counter = 0;
-        while(true && sc.hasNextByte() && counter <16){
-            byteArr[counter] = sc.nextByte();
-            counter++;
-        }
-*/
-        //for(int i=0; i<16; i++){
-        //    byteArr[i] = sc.nextByte();
-        //}
-
-
-        int[][] rKey = new int[4][4];
-        int[][] block = new int[4][4];
-
-
+    private static int[][] bytesToMatrix(byte[] bytes){
+        int[][] matrix = new int[4][4];
         int idx = 0;
         for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
-                rKey[j][i] = (int)byteArr[idx];
-                block[j][i] = (int)byteArr[idx+16];
+                matrix[j][i] = (int)bytes[idx];
                 idx++;
             }
         }
-
-        int[][] cipher = encrypt(block, rKey);
-        //String hexString = AESutils.getHexString(cipher);
-
-        StringBuilder sbB = new StringBuilder();
-        byte[] bytes = getByteArray(cipher);
-        for(byte b: bytes){
-            sbB.append((char)b);
-            //System.out.print(b);
-        }
-
-        StringBuilder sbI = new StringBuilder();
-        for(int i=0; i<4; i++){
-            for(int j=0; j<4; j++) {
-                sbI.append((char)cipher[j][i]);
-            }
-        }
-
-        //System.out.print(AESutils.getHexString(cipher));
-        System.out.println(sbI.toString());
-        System.out.println("\n"+sbB.toString());
-
-        /*
-        try {
-            AESutils.writeFile("aes_output.ans", bytes);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        String tru = "52E418CBB1BE4949308B381691B109FE";
-        boolean TR = tru.equalsIgnoreCase(hexString);
-        //System.out.println("This was : " + TR);
-    */
-
+        return matrix;
     }
 
 
