@@ -1,0 +1,330 @@
+\documentclass[11pt,twoside]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage[english]{babel}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[a4paper,margin=2.5cm,hmarginratio=1:1]{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% ENTER YOUR PERSONAL INFORMATION HERE %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The info of your group members. Set Y and Z empty if you are not
+% three.
+
+% THIS FIRST ONE IS YOU.
+\newcommand{\persnrX}{950214-8159}
+\newcommand{\nameX}{Jonathan}
+\newcommand{\familynameX}{\"{O}deryd}
+\newcommand{\emailX}{oderyd@kth.se}
+
+% THE OTHER TWO ARE PEOPLE YOU HAVE DISCUSSED INFORMALLY WITH.
+\newcommand{\persnrY}{}
+\newcommand{\nameY}{}
+\newcommand{\familynameY}{}
+\newcommand{\emailY}{}
+
+\newcommand{\persnrZ}{}
+\newcommand{\nameZ}{}
+\newcommand{\familynameZ}{}
+\newcommand{\emailZ}{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% DO NOT TOUCH ANYTHING BELOW THIS LINE %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%% Environments %%%%%%%%%%%%%%%
+
+\makeatletter
+\def\th@definition{%
+  \thm@notefont{\bfseries}% same as heading font
+  \normalfont % body font
+}
+\makeatother
+
+\theoremstyle{definition}
+\newtheorem{amsproblem}{Problem}
+\newtheorem{amssubproblem}{Task}[amsproblem]
+
+\newenvironment{problem}[1][]{%
+  \begin{amsproblem}[#1]
+  }{%
+  \end{amsproblem}
+}
+
+\newenvironment{subproblem}[1][]{%
+  \begin{amssubproblem}[#1]
+  }{%
+  \end{amssubproblem}
+}
+
+\newcommand{\homeworknr}{I}
+\newcommand{\homework}{Take-home Exam}
+\newcommand{\coursenumber}{DD2448}
+\newcommand{\coursename}{\coursenumber~Foundations of cryptography}
+\newcommand{\coursenick}{krypto19}
+
+\lhead[\familynameX~\familynameY~\familynameZ]{\coursename}
+\chead{}
+\rhead[\coursename]{\familynameX~\familynameY~\familynameZ}
+\lfoot[\thepage~(\pageref{LastPage})]{}
+\cfoot{}
+\rfoot[]{\thepage~(\pageref{LastPage})}
+
+\fancypagestyle{firststyle}
+{
+   \fancyhf{}
+   \fancyfoot[R]{\thepage~(\pageref{LastPage})}
+}
+
+\renewcommand{\headrulewidth}{0pt}
+
+\newcommand{\TP}[1]{#1T}
+\newcommand{\IP}[1]{#1I}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% HERE YOU CAN ADD YOUR OWN MACROS AND ENVIRONMENTS IN THE PREAMBLE %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Add your macros here.
+
+\newcommand{\TPOINTS}[1]{(#1T)}
+\newcommand{\IPOINTS}[1]{(#1I)}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% THE FOLLOWING GENERATES THE HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% DO NOT TOUCH THIS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\thispagestyle{firststyle}
+
+\noindent
+\hspace{0.3cm}{\huge\textbf{\coursename}}
+
+\noindent
+\rule{\textwidth}{1pt}
+
+\noindent
+\begin{tabularx}{\textwidth}{X|lll}
+  & \textbf{Persnr} & \textbf{Name} & \textbf{Email} \\
+\cline{2-4}
+&\\[-0.3cm]
+  \multirow{2}{*}{\textbf{\huge\homework}} & {\small\textbf{\persnrX}} & {\small\textbf{\nameX}} & {\small\textbf{\emailX}} \\
+  & & {\small\textbf{\familynameX}} & \\
+\cline{2-4}
+  \multirow{2}{*}{\textbf{\huge\coursenick}} & {\small\persnrY} & {\small\nameY} & {\small\emailY} \\
+  & & {\small\familynameY} & \\
+  & {\small\persnrZ} & {\small\nameZ} & {\small\emailZ} \\
+  & & {\small\familynameZ} & \\
+&\\
+[-0.2cm]
+\end{tabularx}
+
+\vspace{0.2cm}
+\noindent
+\rule{\textwidth}{1pt}
+
+\vspace{0.5cm}
+
+\pagestyle{fancy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% YOUR SOLUTIONS START HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                       %%
+%%  Do NOT remove any problem-, or subproblem environments, or nominal   %%
+%%  ponts below. If you can not solve a problem, then you MUST simply    %%
+%%  leave the "NOT SOLVED" string intact. This ensures that the          %%
+%%  numbering is correct and it simplifies grading, leaving more time    %%
+%%  to prepare lectures and help students.                               %%
+%%                                                                       %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\usepackage{amssymb}
+\begin{problem}[\TP{5}]
+
+\item{Some \textbf{requirements} that I assume for a valid cipher C:}
+
+\item{(\textit{\textbf{\RNum{1}}}) \,\,\ C is defined as a tuple (Key, $\mathcal{P}$, Enc, Dec), where $\mathcal{P}$ is the set of plain-texts, Enc is a deterministic encryption algorithm, and Dec = Enc^{-1}} 
+
+
+\item{(\textit{\textbf{\RNum{2}}}) \,\,  \Omega^{q} \in {\mathcal{P}} \, $where q \in \mathbb{N}  $ \,\,\,\,\, - This means that the encryption algorithm must accept all inputs that is a combination of letters in the alphabet, and not dismiss inputs that are not English words for instance}
+
+
+\item{(\textit{\textbf{\RNum{3}}}) \, Given that the students are in high school, C is assumed to be symmetric}
+
+
+\item{ (\textit{\textbf{\RNum{4}}}) \, The Cipher dos not dependent on language (i.e. grammar or translation) }
+
+
+\item{(\textit{\textbf{\RNum{5})}}  \,\,\, C is bijective mapping between a set of plain texts X, and cipher texts Y} 
+\begin{itemize}
+    \item{C = (Enc, Dec): {X }\longleftrightarrow{Y}}
+    
+    \item{Enc: {$X $}\mapsto{$Y$} \, $is a deterministic encryption algorithm$}
+    
+    \item {Dec: {$Y $}\mapsto{$X$} \,\, = $ Enc^{-1} $ }
+    
+    \item{ \large{\textit p} \normalsize = Dec(Enc(\textit{ p }))\,, \forall\, p \in X } \newline
+    
+    
+\end{itemize}
+
+
+\item Considering that the students are in high-school, I assume that most ciphers would include some kind of substitution. Most cipher that only consists of substitution can relatively easy be broken in a CPA (\textit{Chosen-plaintext attack}) \newline 
+The most basic implementation, only based on a one-to-one symbol substitution, could be broken with\, \textbf{n} = $\frac{\|\Omega\|}{2}$ pairs of plain- and cipher-text, where $\|\Omega\|$ is the size of the alphabet.\newline 
+This is because each mapping of a character ${x}\mapsto{y}$, can be used to deduce the inverse. \newline 
+A tempting approach for the students might be to make more substitutions by encrypting the message several times. This would most likely not make it significantly harder to break. \newline 
+Additional rules such as "at the end, swap all vowels to the next consonant in the alphabet"\footnote{This particular rule would probably contradict requirement (i) by not having a unique inverse. For instance, if letter "C" maps to "B" and "Q" maps to "A", it cannot be decided if the letter "B" in a cipher text should be decrypted to "C" or "Q"} \,are transitive from requirement (\small \textbf{\RNum 5}).
+These kinds of additional rules rather comes with a high risk of weakening the cipher by decreasing the size of the codomain of ciphertexts. The rule previously mentioned implies that the cipher text will not include any vowels. \newline 
+Retrieving the key for all substitution ciphers that only acts on individual symbols can be achieved with $n$ pairs of cipher- and plain-texts. For these ciphers, a message $M$, consisting of $m$ characters $c_0$, ... ,$c_m$ , and only acts on symbols, has the following low quality characteristic 
+  $$ Enc(M) = Enc(c_0) \,\Vert \, Enc(c_1) \, \Vert \,... \, \Vert{ Enc(c_n)} \, , \,\,\, where  "a\, \Vert \,b"  \, denotes\, concatenation \, of \, a \, and  \,b
+  $$
+  \item To make the cipher harder to break by using more substitution, the most effective approach would probably be to substitute words. Although it would be difficult to actually implement this because it requires a more complex key, a good aspect of it is that the length of the input and output does not have to be equal. \newline 
+  An example of a ciphers that substitutes words and is simple enough to understand for high-school students is the \textit{book cipher}, where each word in the plaintext is substituted by a pair of integers: one indicating the page number in a book, and the other one indicates the index of the word on that page. Although it violates both requirement (\small \textbf{\RNum 2}) and (\small \textbf{\RNum 5})\footnote{a given word can be encrypted to more than one distinct cipher text} it's still a cipher worth mentioning. I personally think it's a very interesting cipher from a perspective of cryptoanalysis. \newline
+  One of the difficulties of the book cipher is to recognize that it actually is a book cipher and not some other encryption that involves converting letters to numbers. The book cipher can be considered as rather resilient against COA (\textit{ciphertext-only attack}) as it requires a big number of ciphertexts together with the fact that there are so many books to choose as a key. 
+  
+  Breaking the cipher in a CPA can also require a big number of plaintexts since a given word can output different ciphertexts. One strategy for breaking the cipher faster with CPA is to ask for the ciphertext of a word (preferrably a common word) many times. \newline
+  With a CCA (\textit{chosen-ciphertext attack}), the cipher hardly has any resilience at all, as it can be broken without ever knowing the title, author or even language of the book. The algorithm for this is very simple and ought to work for any book cipher: One could simply ask for the plaintext of the ciphertext corresponding to the first word on page one (1, 1), then the second word on page two (1, 2), all the way through the end of the book. To move on from the book cipher and get back to the topic of valid ciphers that follow the requirements. \newline
+  
+  A plausible strategy to further increase the difficulty of a cipher is to add some form of permutation. Some examples that might come to mind for students is to reverse the entire message, or reversing each word, or perhaps reversing blocks of arbitrary size. \newline 
+  Some good properties that follows from this is that a symbol is not always encrypted to the same symbol, but rather it depends on the rest of the message. \newline
+  In order to break this with CPA or CCA, more plaintexts are needed to deduce the entire key. 
+\newline
+
+I assume that the ciphers constructed by high school students will not become much more complex than this, given the assumption that no one of them is a genius. Generally, to break ciphers with COA, one probably has to rely on statistical analysis. This would also assume that the messages corresponding to the ciphertexts are meaningful and not random noise.
+To construct a more complex cipher, it probably requires more knowledge about prime numbers, complexity theory and information theory. This also assumes that no overly complex rules are being used, for instance, "only reversing the message in case of an unlikely event".
+
+
+  
+  %where $x$ \in $ X$, $ y $\in$ Y$  \,\, and \,$ X $\, \cap\,\, Y = \emptyset{}
+  
+\end{problem}
+
+\noindent
+\hrulefill
+
+\begin{problem}[\IP{15}]
+  NOT SOLVED % We leave this place holder here for improved readability.
+\end{problem}
+
+\noindent
+\hrulefill
+
+\begin{problem}
+  \begin{subproblem}[\TP{0}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+  \begin{subproblem}[\TP{6}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+  \begin{subproblem}[\TP{6}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+\end{problem}
+
+\noindent
+\hrulefill
+
+
+
+
+%  Problem 4
+%
+\begin{problem}
+  \begin{subproblem}[\TP{8}]
+
+The general idea is that Prover $P$ claims to have the ability to always guess the correct bit. Since it's hard to prove this by only one trial, in order to feel convinced that $P$ actually has to ability to always guess correct, we demand that r guesses where each guess is correct
+\newline\newline
+    \begin{itemize}
+        \item Verifier $V$ generates $r$ independently random bits $b_0$, .., $b_r$ with probability Pr[ $b_i$ = 1] = $\frac{1}{2}$
+        
+        \item Let $X$ be the number of correct guesses. Since X \sim Bin(r, p) : \newline 
+        
+        
+        $$ Pr[X = r] = {( \frac{1}{2})}^{r} = \frac{1}{2^r} = 2^{-r} $$
+        
+        
+        $$ Pr[X=r] = \binom{n}{r}p^{r}(1-p)^{n-r} $$
+        
+        
+        $$ Pr[(X=r) | (n=r)] = \binom{r}{r}p^{r}(1-p)^{0} = p^r  $$
+        
+
+    \end{itemize}
+
+    
+  \end{subproblem}
+  \begin{subproblem}[\TP{8}]
+    From the canvas page:
+\item    \textit{" By bundling the messages in parallel there are 2 messages instead of 2r, which would be the case if repeated sequentially. "}
+
+  \end{subproblem}
+\end{problem}
+
+\noindent
+\hrulefill
+
+\begin{problem}
+  \begin{subproblem}[\TP{5}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+  \begin{subproblem}[\TP{8}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+  \begin{subproblem}[\TP{3}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+  \begin{subproblem}[\TP{1}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+  \begin{subproblem}[\TP{1}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+\end{problem}
+
+\noindent
+\hrulefill
+
+\begin{problem}
+  \begin{subproblem}[\TP{5}]
+    \item Let $X$ be uniformly distributed over the set $\Omega$ = ${\{0,1\}}^{\ulcorner log \,q \urcorner + t},$ \,and let \textit{q} > 2 is a prime\newline 
+    $Y$:= $X$ mod \textit{q}, \, and $Z$ is uniformly distributed over $\mathbb{Z}_{\textit{q}}$ \newline 
+    The bound is given as \| P_Y - P_Z \| \leq \beta($t$) 
+
+\item For this solution, I assume that $t \in \mathbb{N}$ \newline
+To begin with, the size $s$ of $\Omega$ \, 
+in bits can be expressed as a function of $q$ 
+$$ \| \Omega \| = \, s(\,q)  \, = \ulcorner \log q \urcorner + \, t $$ \newline
+$\ulcorner \, \log{q} \, \urcorner $\, is the number of bits that is needed to represent $q$ in binary notation. \\
+Given that the smallest value for $q$ is $q=3$, which gives s(3)= s(4) = 2.
+    
+  \end{subproblem}
+  \begin{subproblem}[\TP{4}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+  \begin{subproblem}[\TP{4}]
+    NOT SOLVED % We leave this place holder here for improved readability.
+  \end{subproblem}
+\end{problem}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
